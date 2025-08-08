@@ -26,6 +26,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Install Chrome for Puppeteer
+      - name: Setup Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
         # Generate Images In Markdown Files
       - name: Generate Diagrams In Markdown Files
         run: |
@@ -35,7 +41,10 @@ jobs:
             npx -p @mermaid-js/mermaid-cli mmdc --input $file --output $file
           done
         env:
-          PUPPETEER_ARGS: "--no-sandbox --disable-setuid-sandbox --disable-dev-shm-usage"
+          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome-stable
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+          CHROME_BIN: /usr/bin/google-chrome-stable
+          PUPPETEER_LAUNCH_ARGS: "--no-sandbox --disable-setuid-sandbox --disable-dev-shm-usage --disable-extensions --disable-gpu"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
