@@ -30,16 +30,12 @@ jobs:
       - name: Generate Diagrams In Markdown Files
         run: |
           cd docs
-          # Create a temporary puppeteer config
-          echo '{"args":["--no-sandbox"]}' > puppeteer-config.json
-          
           for file in $(find . -name '*.md'); do
             [ -f "$file" ] || continue
-            npx -p @mermaid-js/mermaid-cli mmdc --input $file --output $file --puppeteer-config puppeteer-config.json
+            npx -p @mermaid-js/mermaid-cli mmdc --input $file --output $file
           done
-          
-          # Clean up
-          rm -f puppeteer-config.json
+        env:
+          PUPPETEER_ARGS: "--no-sandbox --disable-setuid-sandbox --disable-dev-shm-usage"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
