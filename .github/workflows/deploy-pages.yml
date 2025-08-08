@@ -30,10 +30,16 @@ jobs:
       - name: Generate Diagrams In Markdown Files
         run: |
           cd docs
+          # Create a temporary puppeteer config
+          echo '{"args":["--no-sandbox"]}' > puppeteer-config.json
+          
           for file in $(find . -name '*.md'); do
             [ -f "$file" ] || continue
-            npx -p @mermaid-js/mermaid-cli mmdc --input $file --output $file --puppeteerConfig '{"args":["--no-sandbox"]}'
+            npx -p @mermaid-js/mermaid-cli mmdc --input $file --output $file --puppeteer-config puppeteer-config.json
           done
+          
+          # Clean up
+          rm -f puppeteer-config.json
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
